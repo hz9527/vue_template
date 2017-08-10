@@ -31,5 +31,7 @@ export default {
   .hello {
     color: #f55;
     text-align: center;
+    height: 500px;
+    background: url('../assets/bg.jpg')
   }
 </style>

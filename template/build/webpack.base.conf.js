@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var buildEnv = JSON.parse(process.env.npm_config_argv).remain[0] || 'test'
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -12,10 +13,10 @@ module.exports = {
     app: './src/main.js'
   },
   output: {
-    path: config.build.assetsRoot,
+    path: config[buildEnv].assetsRoot,
     filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
+      ? config[buildEnv].assetsPublicPath
       : config.dev.assetsPublicPath
   },
   resolve: {
@@ -51,7 +52,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: utils.assetsPath(config[buildEnv].imageFilename)
         }
       },
       {

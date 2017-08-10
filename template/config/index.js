@@ -21,6 +21,28 @@ module.exports = {
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report
   },
+  test: {
+    index: path.resolve(__dirname, '../dist/index.html'),
+    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsSubDirectory: '',
+    assetsPublicPath: '', // static absolute url
+    productionSourceMap: false,
+    filename: 'js/[name].js',
+    chunkFilename: 'js/[name].js',
+    styleFilename: 'css/[name].css',
+    imageFilename: 'img/[name].[ext]'
+  },
+  prod: {
+    index: path.resolve(__dirname, '../dist/index.html'),
+    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsSubDirectory: '',
+    assetsPublicPath: '', // static absolute url
+    productionSourceMap: false,
+    filename: 'js/[name].[chunkhash:10].js',
+    chunkFilename: 'js/[name].[chunkhash:10].js',
+    styleFilename: 'css/[name].[contenthash:10].css',
+    imageFilename: 'img/[name].[hash:6].[ext]'
+  },
   dev: {
     env: require('./dev.env'),
     port: 8080,
