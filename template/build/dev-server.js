@@ -12,6 +12,7 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 var mock = require('./mock-server')
+var fs = require('fs')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -24,7 +25,12 @@ var proxyTable = config.dev.proxyTable
 var app = express()
 // mock serve
 if (Object.keys(proxyTable).length === 0) {
+  console.log('mock start')
   mock(app)
+  fs.watch(path.resolve('../config/mock.js'), () => {
+    console.log('mock reload')
+    mock(app)
+  })
 }
 
 var compiler = webpack(webpackConfig)
