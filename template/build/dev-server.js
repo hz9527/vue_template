@@ -27,7 +27,7 @@ var app = express()
 if (Object.keys(proxyTable).length === 0) {
   console.log('mock start')
   mock(app)
-  fs.watch(path.resolve('../config/mock.js'), () => {
+  fs.watch(path.resolve(__dirname, '../config/mock.js'), () => {
     console.log('mock reload')
     mock(app)
   })

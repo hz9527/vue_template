@@ -2,13 +2,14 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var SpritesmithPlugin = require('webpack-spritesmith')
 var buildEnv = JSON.parse(process.env.npm_config_argv).remain[0] || 'test'
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-module.exports = {
+var webpackConfig = {
   entry: {
     app: './src/main.js'
   },
@@ -20,23 +21,25 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
-    }
-  },
+        extensions: ['.js', '.vue', '.json'],
+        modules: ['node_modules', path.resolve(__dirname, 'src/styles/sprite')],
+        alias: {
+            '@': resolve('src'),
+            'vue$': 'vue/dist/vue.common.js',
+            '~sprite.png': path.resolve(__dirname, '../src/styles/sprites/sprite.png')
+        }
+    },
   module: {
     rules: [
-      {
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      },
+      // {
+      //   test: /\.(js|vue)$/,
+      //   loader: 'eslint-loader',
+      //   enforce: 'pre',
+      //   include: [resolve('src'), resolve('test')],
+      //   options: {
+      //     formatter: require('eslint-friendly-formatter')
+      //   }
+      // },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -72,5 +75,40 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: []
 }
+if (config.settings.spriteConfig) {
+  var spriteConfig = config.settings.spriteConfig
+  console.log(spriteConfig)
+  webpackConfig.plugins.push(new SpritesmithPlugin({
+            src: {
+                cwd: path.resolve(__dirname,'src/'+ spriteConfig.src.path ),
+                glob: '*.png'
+            },
+            target: {
+                image: path.resolve(__dirname,'src/'+ spriteConfig.target.image ),
+                css:  path.resolve(__dirname,'src/'+ spriteConfig.target.css )
+            },
+            apiOptions: {
+                cssImageRef: spriteConfig.cssImageRef
+            },
+            spritesmithOptions: {
+                algorithm: 'top-down',
+                padding: spriteConfig.padding || 10
+            }
+        }))
+}
+if (config.settings.enableEslint) {
+  webpackConfig.module.rules.unshift({
+    test: /\.(js|vue)$/,
+    loader: 'eslint-loader',
+    enforce: 'pre',
+    include: [resolve('src'), resolve('test')],
+    options: {
+      formatter: require('eslint-friendly-formatter')
+    }
+  })
+}
+// console.log(webpackConfig)
+module.exports = webpackConfig

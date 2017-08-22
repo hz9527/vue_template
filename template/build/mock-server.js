@@ -3,7 +3,7 @@ var config = require('../config/mock')
 
 module.exports = function (app) {
   app.use(bodyParser.json())
-  require.catch['../config/mock'] = null
+  require.cache[require.resolve('../config/mock')] = null
   try {
     config = require('../config/mock')
   } catch (err) {

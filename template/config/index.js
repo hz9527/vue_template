@@ -43,6 +43,22 @@ module.exports = {
     styleFilename: 'css/[name].[contenthash:10].css',
     imageFilename: 'img/[name].[hash:6].[ext]'
   },
+  // 基本配置
+  settings:{
+    dropConsole:true , // 去掉生产环境console
+    enableEslint:true , // 是否开启eslint
+    spriteConfig:{ // 雪碧图配置 object || false
+      src:{
+        path :'src/assets/icons/' // src 图片文件夹路径
+      },
+      target:{
+        image : 'src/styles/sprite/sprite.png', // target 图片路径
+        css : 'src/styles/sprite/sprite.scss' // target css 路径
+      },
+      padding:10 ,  // icons padding
+      cssImageRef: '~sprite.png' // 生成图片相对css内引用的路径
+    }
+  },
   dev: {
     env: require('./dev.env'),
     port: 8080,
